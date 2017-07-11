@@ -1,0 +1,121 @@
+@media print {
+	
+	body, td, span, th{
+    font-family: Arial;
+    font-size: 0.85em;
+  }
+  
+	.fc-event-upsell .fc-content  {
+		background-color: green;
+	}
+	
+	.fc-event-alacarte .fc-content {
+		background-color: #E6E6FA;
+	}
+	
+	
+	  /* Cancelled */
+	.fc-event-status-cancelled {
+	  background: red !important;
+	}
+	
+	/* Completed */
+	.fc-event-status-completed .fc-content,
+	.fc-event-status-completed .fc-content .fc-time,
+	.fc-event-status-completed .fc-content .fc-title{
+	  text-decoration: line-through;
+	  color: red !important;
+	}
+	
+	.fc-event-status-confirmed,
+	.fc-event-status-confirmed .fc-bg,
+	.fc-event-status-confirmed .fc-content,
+	.fc-event-status-confirmed .fc-content .fc-time,
+	.fc-event-status-confirmed .fc-content .fc-title{
+	  background-color: #87CEEB !important;
+	}
+	
+	.fc-event-status-tentative,
+	.fc-event-status-tentative .fc-bg,
+	.fc-event-status-tentative .fc-content,
+	.fc-event-status-tentative .fc-content .fc-time,
+	.fc-event-status-tentative .fc-content .fc-title{
+	  background-color: #00FFFF !important;
+	}
+	
+	.fc-event-status-treatment_done,
+	.fc-event-status-treatment_done .fc,
+	.fc-event-status-treatment_done .fc-bg,
+	.fc-event-status-treatment_done .fc-content,
+	.fc-event-status-treatment_done .fc-content .fc-time,
+	.fc-event-status-treatment_done .fc-content .fc-title{
+	  text-decoration: line-through;
+	  color: #000 !important;
+	}
+	
+	.fc-event-status-foc,
+	.fc-event-status-foc .bg,
+	.fc-event-status-foc .fc-content,
+	.fc-event-status-foc .fc-content .fc-time,
+	.fc-event-status-foc .fc-content .fc-title{
+	  background-color: #FFA500 !important;
+	}
+	
+	.fc-event-status-receptionist,
+	.fc-event-status-receptionist .fc-bg,
+	.fc-event-status-receptionist .fc-content,
+	.fc-event-status-receptionist .fc-content .fc-time,
+	.fc-event-status-receptionist .fc-content .fc-title{
+	  background-color: #800080 !important;
+	  color: #fff;
+	}
+	
+	
+	.fc-event-status-os_done .fc-content,
+	.fc-event-status-os_done .fc-content .fc-time,
+	.fc-event-status-os_done .fc-content .fc-title {
+	  text-decoration: line-through;
+	  color: red !important;
+	}
+	
+	.fc-event-status-on_going .fc-content,
+	.fc-event-status-on_going .fc-content .fc-time,
+	.fc-event-status-on_going .fc-content .fc-title {
+	  text-decoration: line-through;
+	}
+	
+	.fc-event-included,
+	.fc-event-included .fc-bg,
+	.fc-event-included .fc-content,
+	.fc-event-included .fc-content .fc-time,
+	.fc-event-included .fc-content .fc-title{
+	  background-color: #FFFF00 !important;
+	}
+	
+	.schedule {
+
+	}
+	
+	.schedule-OFF {
+	  background-color: #c0c0c0;
+	}
+	
+	.schedule-SL, 
+	.schedule-PL, 
+	.schedule-VL, 
+	.schedule-SH, 
+	.schedule-LH, 
+	.schedule-ML, 
+	.schedule-AWOL, 
+	.schedule-OHD, 
+	.schedule-OS, 
+	.schedule-EL {
+	  background-color: #00FF00;
+	  color:#000000;
+	}
+	
+	.schedule-Receptionist {
+	  background-color: #800080;
+	}
+
+}

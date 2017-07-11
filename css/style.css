@@ -1,0 +1,7 @@
+#header .container, .top-nav .container {
+	width: 100%;
+}
+
+.container .container-full {
+	width: 1280px;
+}

@@ -1,0 +1,1 @@
+<h4 class="headline">Messages <a href="<?php echo site_url('backend/message/edit/'.$contact_id); ?>" class="btn btn-primary"class="btn btn-primary" data-target="#modal-popup" data-toggle="modal">Add <i class="fa fa-plus"></i></a></h4>

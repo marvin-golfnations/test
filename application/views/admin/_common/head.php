@@ -7,11 +7,14 @@
 <link href="https://fonts.googleapis.com/css?family=Mr+De+Haviland" rel="stylesheet" type="text/css" />
 <link href="https://fonts.googleapis.com/css?family=Raleway:300,100" rel="stylesheet" type="text/css" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="/css/app.css" type="text/css">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 <link rel="stylesheet" href="/css/fullcalendar.min.css">
 <link rel="stylesheet" href="/css/scheduler.css">
 <link rel="stylesheet" href="/css/bootstrap-select.css">
@@ -20,8 +23,6 @@
 <link rel="stylesheet" href="/css/multi-select.css">
 <link rel="stylesheet" href="/css/bootstrap-timepicker.css">
 <link rel="stylesheet" href="/js/summernote/summernote.css">
-<link rel="stylesheet" href="/css/app.css" type="text/css">
-<link rel="stylesheet" href="/css/common.css" type="text/css">
 <link rel="stylesheet" href="/css/BootSideMenu.css">
 
 <script src="/js/app.js"></script>		
@@ -264,6 +265,24 @@ label.error {
     text-align: center;
     vertical-align: baseline;
     white-space: nowrap;
+}
+
+.fc-byProviders-view thead.sticky{
+    width: 100%;
+    position: fixed;
+    top:63px;
+    display:table;
+    background: #fff;
+    z-index: 999;
+    font-size: 10px;
+}
+
+.fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active, .btn-group > .btn.active {
+    z-index: auto;
+}
+
+.bootstrap-select.btn-group .dropdown-menu.inner {
+    position: static;
 }
 
 <?php if (isset($inline_css)) : ?>

@@ -96,6 +96,20 @@
 							ul.find('li#event-'+event_id).fadeOut();
 						}
 					}
+
+					if (ul.find('li').length === 0) {}
+
+					console.log();
+
+					/*
+                     position: absolute;
+                     width: auto;
+                     height: 200px;
+                     z-index: 15;
+                     top: 50%;
+                     left: 50%;
+                     margin: 0 auto;
+					 */
 										
 				}).always(function(){
 					setTimeout('get_unassigned_events(false)', 1000*6);

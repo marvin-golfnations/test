@@ -59,12 +59,12 @@ ob_start();
                 <div class="form-group">
                     <div class="input-group" style="width:100%">
                         <?php echo form_dropdown('item_id', available_booking_items($booking_id), $item_id,
-                            'class="select-picker form-control" data-header="Select Service" data-live-search="true" ' . ($item_id ? 'readonly' : '')); ?>
+                            'class="form-control" data-header="Select Service" data-live-search="true" ' . ($item_id ? 'readonly' : '')); ?>
                     </div>
                 </div>
-                <input type="checkbox" name="included" <?php echo $included ? 'checked' : '';?>> Included
-                <input type="checkbox" name="not_included" <?php echo $not_included ? 'checked' : '';?>> Not Included
-                <input type="checkbox" name="foc" <?php echo $foc ? 'checked' : '';?>> FOC
+                <input type="checkbox" value="1" name="incl" <?php echo $incl ? 'checked' : '';?>> Included
+                <input type="checkbox" value="1" name="not_incl" <?php echo $not_incl ? 'checked' : '';?>> Not Included
+                <input type="checkbox" value="1" name="foc" <?php echo $foc ? 'checked' : '';?>> FOC
             </div>
         </div>
         <div class="col-xs-12 col-md-6 col-lg-6">
@@ -143,24 +143,24 @@ ob_start();
 
     </div>
 
-    <div class="panel-collapse collapse <?php echo $status === 'cancelled' ? 'in' : '' ?>" id="collapseExample">
+    <div class="panel-collapse collapse statusOptions <?php echo $status === 'cancelled' ? 'in' : '' ?>" id="cancelledOptions">
 
         <div class="alert alert-warning alert-dismissible fade in form-group" role="alert">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-6 col-sm-6">
                     <label class="bold text-muted">Called by</label>
                     <?php echo form_dropdown('called_by', $providers, $called_by, 'class="show-tick form-control"'); ?>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-6 col-sm-6">
                     <label class="bold text-muted">Cancelled by</label>
                     <?php echo form_dropdown('cancelled_by', $audit_users, $cancelled_by, 'class="show-tick form-control"'); ?>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-6 col-sm-6">
                     <label class="bold text-muted">Reason</label>
                     <?php echo form_dropdown('cancelled_reason', $reasons, $cancelled_reason, 'class="form-control required" placeholder="Enter Reason"'); ?>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-6 col-sm-6">
                     <label class="bold text-muted">Date</label>
                     <?php echo form_input('date_cancelled', $date_cancelled, 'class="form-control required datepicker" placeholder="Enter Reason"'); ?>
                 </div>
@@ -169,8 +169,44 @@ ob_start();
             </div>
         </div>
     </div>
+
+    <div class="panel-collapse collapse statusOptions <?php echo $status === 'os-done' ? 'in' : '' ?>" id="os-doneOptions">
+
+        <div class="alert alert-warning alert-dismissible fade in form-group" role="alert">
+            <div class="row">
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">Included OS No.</label>
+                    <?php echo form_input('incl_os_done_number', $incl_os_done_number, 'class="form-control"'); ?>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">Included OS Price</label>
+                    <?php echo form_input('incl_os_done_amount', $incl_os_done_amount, 'class="form-control"'); ?>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">Not Incl. OS No.</label>
+                    <?php echo form_input('not_incl_os_done_number', $not_incl_os_done_number, 'class="form-control"'); ?>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">Not Incl. OS Price</label>
+                    <?php echo form_input('not_incl_os_done_amount', $not_incl_os_done_amount, 'class="form-control"'); ?>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">FOC OS No.</label>
+                    <?php echo form_input('foc_os_done_number', $foc_os_done_number, 'class="form-control"'); ?>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <label class="bold text-muted">FOC OS Price</label>
+                    <?php echo form_input('foc_os_done_amount', $foc_os_done_amount, 'class="form-control"'); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
+
+            $('.selectpicker').selectpicker('render');
+
             $('input[name="first_name"]').on('blur', function(){
                 console.log(this.value);
             }) ;

@@ -239,7 +239,7 @@ class Events extends TF_Controller {
         $providers = keyval($this->availability->get_available_peoples(), 'contact_id', array('first_name', 'last_name'), 'position', $select_provider);
         $data['providers'] = $providers;
 
-        $data['statuses'] = get_statuses(2);
+        $data['statuses'] = get_event_statuses();
         
 		$categories = array(9);
 		

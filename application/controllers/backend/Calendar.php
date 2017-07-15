@@ -24,8 +24,8 @@ class Calendar extends TF_Controller
             $notes = $this->input->get_post('notes');
             $booking_item_id = (int)$this->input->get_post('booking_item_id');
             $event_title = $this->input->get_post('event_title') ? $this->input->get_post('event_title') : '';
-            $included = (int)$this->input->get_post('included');
-            $not_included = (int)$this->input->get_post('not_included');
+            $included = (int)$this->input->get_post('incl');
+            $not_included = (int)$this->input->get_post('not_incl');
             $foc = (int)$this->input->get_post('foc');
 
             $update_calendar_views = $this->input->get_post('update_calendar_views');
@@ -70,6 +70,9 @@ class Calendar extends TF_Controller
                 'cancelled_reason' => '',
                 'date_cancelled' => 0,
                 'notes' => $notes,
+                'incl' => $included,
+                'not_incl' => $not_included,
+                'foc' => $foc
             );
 
             if ($status === 'cancelled') {
@@ -308,8 +311,41 @@ class Calendar extends TF_Controller
             }
         }
 
-        $styles = get_statuses_style(2);
+
         $inline_css = array();
+        $inline_css[] = array('name' => array(
+            '.fc-event-included',
+            '.fc-event-included .fc-bg',
+            '.fc-event-included .fc-content',
+            '.fc-event-included .fc-content .fc-time',
+            '.fc-event-included .fc-content .fc-title'
+        ), 'style' => 'background-color: #FFFF00;');
+
+        $inline_css[] = array('name' => array(
+            '.fc-event-upsell',
+            '.fc-event-upsell .fc-bg',
+            '.fc-event-upsell .fc-content',
+            '.fc-event-upsell .fc-content .fc-time',
+            '.fc-event-upsell .fc-content .fc-title'
+        ), 'style' => 'background-color: #E6E6FA;');
+
+        $inline_css[] = array('name' => array(
+            '.fc-event-foc',
+            '.fc-event-foc .fc-bg',
+            '.fc-event-foc .fc-content',
+            '.fc-event-foc .fc-content .fc-time',
+            '.fc-event-foc .fc-content .fc-title'
+        ), 'style' => 'background-color: #FFA500');
+
+        $inline_css[] = array('name' => array(
+            '.fc-event-alacarte',
+            '.fc-event-alacarte .fc-bg',
+            '.fc-event-alacarte .fc-content',
+            '.fc-event-alacarte .fc-content .fc-time',
+            '.fc-event-alacarte .fc-content .fc-title'
+        ), 'style' => 'background-color: #FFA500');
+
+        $styles = get_event_status_styles();
         foreach ($styles as $status => $style) {
             $inline_css[] = array(
                 'name' => array(
@@ -321,46 +357,14 @@ class Calendar extends TF_Controller
                 'style' => $style);
         }
 
-        $inline_css[] = array('name' => array(
-            '.fc-event-included',
-            '.fc-event-included .fc-bg',
-            '.fc-event-included .fc-content',
-            '.fc-event-included .fc-content .fc-time',
-            '.fc-event-included .fc-content .fc-title'
-        ), 'style' => 'background-color: #FFFF00 !important; color: #000; color:#788288 !important;');
 
-        $inline_css[] = array('name' => array(
-            '.fc-event-upsell',
-            '.fc-event-upsell .fc-bg',
-            '.fc-event-upsell .fc-content',
-            '.fc-event-upsell .fc-content .fc-time',
-            '.fc-event-upsell .fc-content .fc-title'
-        ), 'style' => 'background-color: #E6E6FA !important; color: #000;');
-
-        $inline_css[] = array('name' => array(
-            '.fc-event-foc',
-            '.fc-event-foc .fc-bg',
-            '.fc-event-foc .fc-content',
-            '.fc-event-foc .fc-content .fc-time',
-            '.fc-event-foc .fc-content .fc-title'
-        ), 'style' => 'background-color: #FFA500 !important;');
-
-        $inline_css[] = array('name' => array(
-            '.fc-event-alacarte',
-            '.fc-event-alacarte .fc-bg',
-            '.fc-event-alacarte .fc-content',
-            '.fc-event-alacarte .fc-content .fc-time',
-            '.fc-event-alacarte .fc-content .fc-title'
-        ), 'style' => 'background-color: #FFA500 !important;');
-
-
-        $statuses = get_statuses(2);
+        $statuses = get_event_statuses();
 
         
         $default_view = $this->session->userdata('default_calendar_view');
 
         $data = array();
-        $data['statuses'] = get_statuses(2);
+        $data['statuses'] = get_event_statuses();
 		$data['locations'] = $this->session->userdata('location'); // $locations;
         $data['inline_css'] = $inline_css;
         $inline_js = array(
@@ -516,7 +520,7 @@ class Calendar extends TF_Controller
             $resources[] = $info;
         }
 
-        $styles = get_statuses_style(2);
+        $styles = get_event_status_styles();
         $inline_css = array();
         foreach ($styles as $status => $style) {
             $inline_css[] = array(
@@ -563,7 +567,7 @@ class Calendar extends TF_Controller
 
 
         $data = array();
-        $data['statuses'] = get_statuses(2);
+        $data['statuses'] = get_event_statuses();
         $data['inline_css'] = $inline_css;
         $data['inline_js'] = array(
             'resources' => $resources,
@@ -588,7 +592,7 @@ class Calendar extends TF_Controller
             'show_off_providers' => false,
             'viewFullDetails' => true, //!tf_current_user_can('edit_calendar'),
             'canChange' => true,
-            'statuses' => get_statuses(2),
+            'statuses' => get_event_statuses(),
             'selected_statuses' => $this->session->userdata('calendar_view_status') ? $this->session->userdata('calendar_view_status') : array(),
             'selected_positions' => $this->session->userdata('calendar_view_positions') ? $this->session->userdata('calendar_view_positions') : array(),
         );
@@ -881,7 +885,7 @@ class Calendar extends TF_Controller
 
         $events = get_events($booking_id, 0, 'contact_id', $start, $start, false, 'confirmed', $statuses, $locations);
 
-        $styles = get_statuses_style(2);
+        $styles = get_event_status_styles();
         $inline_css = array();
         foreach ($styles as $status => $style) {
             $inline_css[] = array(

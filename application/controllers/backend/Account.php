@@ -38,7 +38,6 @@ class Account extends TF_Controller {
 
         $this->form_validation->set_rules('first_name','First name','required');
         $this->form_validation->set_rules('last_name','Last name','required');
-        //$this->form_validation->set_rules('email','Email','required');
 
         if($this->form_validation->run()==TRUE){
 
@@ -198,7 +197,7 @@ class Account extends TF_Controller {
 
         $data['confirmed_bookings'] = $confirmed_bookings;
 
-        $data['statuses'] = get_statuses(1);
+        $data['statuses'] = get_booking_statuses();
 
         $data['nationality'] = $data['account']['nationality'] === '' ? 'Filipino' : $data['account']['nationality'];
 
@@ -427,9 +426,15 @@ class Account extends TF_Controller {
             'end_dt' => $end_date_dt->format('Y-m-d H:i:s'),
             'event_title' => $this->input->get_post('event_title'),
             'notes' => $this->input->get_post('notes'),
-            'included' => 0,
-            'not_included' => 0,
-            'foc' => 0
+            'incl' => 0,
+            'not_incl' => 0,
+            'foc' => 0,
+            'incl_os_done_number' => '',
+            'incl_os_done_amount' => '',
+            'not_incl_os_done_number' => '',
+            'not_incl_os_done_amount' => '',
+            'foc_os_done_number' => '',
+            'foc_os_done_amount' => '',
         );
 
 
@@ -437,7 +442,7 @@ class Account extends TF_Controller {
 
             $this->db->select('booking_events.*, items.duration, items.max_provider, 
                 bookings.booking_id, bookings.guest_id, booking_events.notes, 
-                booking_items.item_id, booking_items.included, booking_items.foc, 0 as not_included');
+                booking_items.item_id');
             $this->db->from('booking_events');
             $this->db->join('booking_items', 'booking_events.booking_item_id = booking_items.booking_item_id', 'left');
             $this->db->join('bookings', 'bookings.booking_id = booking_items.booking_id', 'left');
@@ -472,9 +477,15 @@ class Account extends TF_Controller {
             'start_time' => date('H:i', strtotime($event_data['start_dt'])),
             'end_date' => date('Y-m-d', strtotime($event_data['end_dt'])),
             'end_time' => date('H:i', strtotime($event_data['end_dt'])),
-            'included' => $event_data['included'],
+            'incl' => $event_data['incl'],
             'foc' => $event_data['foc'],
-            'not_included' => $event_data['not_included'],
+            'not_incl' => $event_data['not_incl'],
+            'incl_os_done_number' => $event_data['incl_os_done_number'],
+            'incl_os_done_amount' => $event_data['incl_os_done_amount'],
+            'not_incl_os_done_number' => $event_data['not_incl_os_done_number'],
+            'not_incl_os_done_amount' => $event_data['not_incl_os_done_amount'],
+            'foc_os_done_number' => $event_data['foc_os_done_number'],
+            'foc_os_done_amount' => $event_data['foc_os_done_amount']
         );
         
         $data['assigned_to'] = $assigned_to;
@@ -539,7 +550,7 @@ class Account extends TF_Controller {
         $providers = keyval($this->provideravailability->get_available(), 'contact_id', array('first_name', 'last_name'), 'position', $select_provider);
         $data['providers'] = $providers;
 
-        $statuses = array_merge(array('' => '-Select-'), get_statuses(2));
+        $statuses = array_merge(array('' => '-Select-'), get_event_statuses());
         $data['statuses'] = $statuses;
 		$data['dates'] = array();
 		if ($booking_id === 0) {

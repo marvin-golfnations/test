@@ -314,7 +314,7 @@ class Booking extends TF_Controller {
 		
 		$data['services'] = $this->db->get('items')->result_array();
 
-		$statuses = array_merge(array('' => '-Select-'), get_statuses(1));
+		$statuses = array_merge(array('' => '-Select-'), get_booking_statuses());
 		$data['statuses'] = $statuses;
 
 		$data['booking_items'] = booking_items($data['booking_id']);

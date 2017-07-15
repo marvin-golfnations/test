@@ -232,3 +232,87 @@ ALTER TABLE tf_booking_events ADD COLUMN not_incl_os_done_number VARCHAR(20) NUL
 ALTER TABLE tf_booking_events ADD COLUMN not_incl_os_done_amount DECIMAL(10, 2) NOT NULL;
 ALTER TABLE tf_booking_events MODIFY COLUMN start_dt DATETIME NULL;
 ALTER TABLE tf_booking_events MODIFY COLUMN end_dt DATETIME NULL;
+
+ALTER TABLE tf_statuses ADD COLUMN status_cd VARCHAR(40) NOT NULL AFTER group_id;
+UPDATE tf_statuses SET status_cd = REPLACE(LOWER(TRIM(status_name)),' ', '-');
+
+ALTER TABLE tf_status_groups ADD COLUMN group_cd VARCHAR(40) NOT NULL AFTER group_id;
+UPDATE tf_status_groups SET group_cd = REPLACE(LOWER(TRIM(group_name)),' ', '-');
+
+ALTER TABLE tf_groups ADD COLUMN group_cd VARCHAR(40) NOT NULL AFTER group_id;
+UPDATE tf_groups SET group_cd = REPLACE(LOWER(TRIM(group_name)),' ', '-');
+
+CREATE TABLE IF NOT EXISTS tf_revision_action(
+  action_cd VARCHAR(20),
+  action_name VARCHAR(50),
+  PRIMARY KEY(action_cd)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tf_revision_action VALUE('INS', 'Insert'), ('UPD', 'Update'), ('DEL', 'Delete');
+
+CREATE TABLE IF NOT EXISTS tf_booking_event_revisions (
+  revision_id INT NOT NULL AUTO_INCREMENT,
+  action_cd VARCHAR(20),
+  event_id INT NOT NULL,
+  revision_date INT,
+  PRIMARY KEY(revision_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tf_booking_event_revisions ADD CONSTRAINT `booking_action_fk` FOREIGN KEY(`action_cd`) REFERENCES `tf_revision_action`(`action_cd`);
+ALTER TABLE tf_booking_event_revisions ADD CONSTRAINT `booking_event_fk` FOREIGN KEY(`event_id`) REFERENCES `tf_booking_events`(`event_id`);
+
+
+CREATE TABLE IF NOT EXISTS tf_revisions (
+  revision_id INT NOT NULL AUTO_INCREMENT,
+  revision_date INT,
+  action_cd VARCHAR(20),
+  table_name VARCHAR(50),
+  table_pk INT NOT NULL,
+  PRIMARY KEY(revision_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tf_revisions ADD CONSTRAINT `rev_action_fk` FOREIGN KEY(`action_cd`) REFERENCES `tf_revision_action`(`action_cd`);
+
+CREATE TABLE IF NOT EXISTS tf_contact_status (
+  status_cd VARCHAR(20) NOT NULL,
+  status_value VARCHAR(50) NOT NULL,
+  PRIMARY KEY(status_cd)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tf_contact_status VALUE('inactive', 'Inactive'), ('active', 'Active'), ('deleted', 'Deleted');
+
+CREATE TABLE IF NOT EXISTS tf_booking_status (
+  status_cd VARCHAR(20) NOT NULL,
+  status_value VARCHAR(50) NOT NULL,
+  PRIMARY KEY(status_cd)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tf_booking_status SELECT status_cd, status_name FROM tf_statuses WHERE group_id=1;
+
+CREATE TABLE IF NOT EXISTS tf_event_status (
+  status_cd VARCHAR(20) NOT NULL,
+  status_value VARCHAR(50) NOT NULL,
+  status_order SMALLINT(3),
+  status_style VARCHAR(200),
+  include_in_sales VARCHAR(1),
+  include_in_duplicate_checking VARCHAR(1),
+  PRIMARY KEY(status_cd)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tf_event_status SELECT status_cd, status_name, status_order, status_style, include_in_sales, include_in_duplicate_checking FROM tf_statuses WHERE group_id=2;
+
+UPDATE tf_booking_events SET status=REPLACE(LOWER(TRIM(status)),' ', '-');
+
+ALTER TABLE tf_booking_events ADD CONSTRAINT `booking_event_status_fk` FOREIGN KEY(`status`) REFERENCES `tf_event_status`(`status_cd`);
+ALTER TABLE tf_bookings ADD CONSTRAINT `booking_status_fk` FOREIGN KEY(`status`) REFERENCES `tf_event_status`(`status_cd`);
+
+/*Booking Forms*/
+ALTER TABLE tf_booking_forms MODIFY COLUMN completed_by INT NULL;
+UPDATE tf_booking_forms SET completed_by=NULL WHERE completed_by=0;
+ALTER TABLE tf_booking_forms ADD CONSTRAINT `booking_form_completed_fk` FOREIGN KEY(`completed_by`) REFERENCES `tf_contacts`(`contact_id`);
+ALTER TABLE tf_booking_forms ADD CONSTRAINT `booking_form_fk` FOREIGN KEY(`form_id`) REFERENCES `tf_forms`(`form_id`);
+
+/*Booking Events*/
+ALTER TABLE tf_booking_events ADD COLUMN incl INT(1) NOT NULL;
+ALTER TABLE tf_booking_events ADD COLUMN not_incl INT(1) NOT NULL;
+ALTER TABLE tf_booking_events ADD COLUMN foc INT(1) NOT NULL;

@@ -668,15 +668,11 @@
                     calculateEndTime(duration);
                 });
 
-                console.log(modal.find('select[name="status"]'));
-
                 modal.find('select[name="status"]').on('change', function () {
                     var status = $(this).val();
                     var $options = modal.find('#'+status+'Options');
 
                     modal.find('.statusOptions').hide();
-
-                    console.log(status, $options);
 
                     if ($options.length > 0) {
                         $options.show();
